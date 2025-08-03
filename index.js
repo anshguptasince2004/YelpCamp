@@ -24,7 +24,7 @@ app.engine('ejs', ejsMate)
 
 app.use("/campgrounds", campgrounds)
 app.use("/campgrounds/:id/reviews", reviews)
-
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.all(/(.*)/, (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))

@@ -11,6 +11,8 @@ const flash = require('connect-flash');
 const campgrounds = require('./routes/campgrounds.js')
 const reviews = require('./routes/reviews.js')
 
+
+
 mongoose.connect('mongodb://localhost:27017/YelpCamp')
 .then(() => {
     console.log("Connected to MongoDB");

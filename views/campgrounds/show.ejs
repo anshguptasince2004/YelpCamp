@@ -23,60 +23,69 @@
                     </li>
                 </ul>
                 <% if(currentUser && campground.author.equals(currentUser._id)) {%>
-                <div class="card-body">
-                    <a href="/campgrounds/<%= campground._id %>/edit" class="card-link btn btn-warning">Edit
-                        Campground</a>
-                    <form class="d-inline" action="/campgrounds/<%=campground._id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </div>
-                <% } %>
-                <div class="card-footer">
-                    <a href="/campgrounds" class="card-link">All Campgrounds</a>
-                </div>
+                    <div class="card-body">
+                        <a href="/campgrounds/<%= campground._id %>/edit" class="card-link btn btn-warning">Edit
+                            Campground</a>
+                        <form class="d-inline" action="/campgrounds/<%=campground._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                    <% } %>
+                        <div class="card-footer">
+                            <a href="/campgrounds" class="card-link">All Campgrounds</a>
+                        </div>
             </div>
         </div>
         <br>
         <div class="col-6">
-            <h2>Leave a review:</h2>
-            <form action="/campgrounds/<%= campground._id%>/reviews" method="POST" class="mb-3 validated-form"
-                novalidate>
-                <div class="mb-3">
-                    <label class="form-label" for="rating">Rating:</label>
-                    <input type="range" min="1" max="10" name="review[rating]" id="rating" class="form-range">
-                </div>
-                <div class="mb-3">
-                    <label for="body" class="form-label">Review:</label>
-                    <textarea class="form-control" name="review[body]" id="body" rows="3" cols="5"></textarea>
-                    <div class="valid-feedback">
-                        Looks good!
+            <% if(currentUser) {%>
+                <h2>Leave a review:</h2>
+                <form action="/campgrounds/<%= campground._id%>/reviews" method="POST" class="mb-3 validated-form"
+                    novalidate>
+                    <div class="mb-3">
+                        <label class="form-label" for="rating">Rating:</label>
+                        <input type="range" min="1" max="10" name="review[rating]" id="rating" class="form-range">
                     </div>
-                </div>
-                <button class="btn btn-success">Submit</button>
-            </form>
-            <div class="mb-3">
-                <% let rating=0; let count=0; for (let r of campground.reviews) { rating +=r.rating; count++; } let
-                    avgRating=count> 0 ? (rating / count).toFixed(1) : "No ratings yet";
-                    %>
-                    <h4>Ratings: <%= avgRating %>
-                    </h4>
-            </div>
-            <h4>Reviews: </h4>
-            <% for(let review of campground.reviews) { %>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">User:</h5>
-                        <p><b>Rating:</b>
-                        <%= review.rating %>
-                            <p class="card-text">
-                                <b>Review:</b>
-                                <%= review.body %>
-                            </p></p>
-                            <form action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE" method = "POST">
-                                <button class="btn btn-sm btn-danger">Delete</button>
-                            </form>
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Review:</label>
+                        <textarea class="form-control" name="review[body]" id="body" rows="3" cols="5"></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
                     </div>
+                    <button class="btn btn-success">Submit</button>
+                </form>
+                <div class="mb-3">
+                    <% let rating=0; let count=0; for (let r of campground.reviews) { rating +=r.rating; count++; } let
+                        avgRating=count> 0 ? (rating / count).toFixed(1) : "No ratings yet";
+                        %>
+                        <h4>Ratings: <%= avgRating %>
+                        </h4>
                 </div>
                 <% } %>
+                <h4>Reviews: </h4>
+                <% for(let review of campground.reviews) { %>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">User:
+                                    <span class="card-subtitle mb-2 text-muted"><%=review.author.username%></span></h5>
+                            <div><b>Rating:</b>
+                                <%= review.rating %>
+                                    <p class="card-text">
+                                        <b>Review:</b>
+                                        <%= review.body %>
+                                    </p>
+                                </div>
+                                <br>
+                            <% if(currentUser && review.author.equals(currentUser._id)) {%>
+                                <form
+                                    action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE"
+                                    method="POST">
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                                <% } %>
+                        </div>
+                    </div>
+                    <% } %>
         </div>
     </div>

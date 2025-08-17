@@ -5,16 +5,14 @@ const ExpressError = require('../utils/ExpressError');
 const Campground = require('../models/campground');
 const { isLoggedIn, isAuthor, validateCampground } = require('./middleware.js');
 const campgrounds = require('../controllers/campgrounds');
-const { cloudinary, storage } = require('../cloudinary');
+const { storage } = require('../cloudinary');
 const multer = require('multer');
 const upload = multer({ storage });
 
 
 router.route('/')
 .get(catchAsync(campgrounds.index))
-// .post(isLoggedIn, validateCampground, catchAsync(campgrounds.createCampground));
-.post(upload.single('image'), isLoggedIn, validateCampground, catchAsync(campgrounds.createCampground));
-
+.post(isLoggedIn, upload.array('image'), validateCampground, catchAsync(campgrounds.createCampground));
 
 router.get('/new', isLoggedIn, campgrounds.newCampgroundForm);
 

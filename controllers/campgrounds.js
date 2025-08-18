@@ -6,17 +6,19 @@ module.exports.index = async (req, res) => {
 }
 
 module.exports.newCampgroundForm = (req, res) => {
+    console.log('new campground form')
     res.render('campgrounds/new')
 }
 
 module.exports.createCampground = async (req, res, next) => {
-    // if(!req.body.campground) throw new ExpressError('Inavlid Campground Data', 400)
+    console.log('create campground')
     const campground = new Campground(req.body.campground);
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.author = req.user._id;
     await campground.save();
-    req.flash('success', 'New Campground added successfully');
-    res.redirect(`/campgrounds/${campground._id}`);
+    console.log(campground);
+    req.flash('success', 'Successfully made a new campground!');
+    res.redirect(`/campgrounds/${campground._id}`)
 }
 
 module.exports.showCampground = async (req, res) => {

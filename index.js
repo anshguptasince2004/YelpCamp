@@ -63,6 +63,10 @@ app.use((req, res, next) => {
     next();
 })
 
+app.get('/', (req, res) => {
+    res.render('home')
+})
+
 app.use('/', userRoutes);
 app.use("/campgrounds", campgroundsRoutes)
 app.use("/campgrounds/:id/reviews", reviewsRoutes)
@@ -75,6 +79,7 @@ app.use((err, req, res, next) => {
     if(!err.message) err.message = "Something went wrong!!"
     res.status(statusCode).render('error', {err});
 })
+
 app.listen(3000, () => {
     console.log("Serving on port 3000")
 })

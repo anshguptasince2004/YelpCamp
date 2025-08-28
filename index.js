@@ -1,4 +1,4 @@
-if(process.env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
 
@@ -23,16 +23,16 @@ const reviewsRoutes = require('./routes/reviews.js')
 const userRoutes = require('./routes/users.js')
 
 mongoose.connect('mongodb://localhost:27017/YelpCamp')
-.then(() => {
-    console.log("Connected to MongoDB");
-}) .catch(err => {
-    console.log("Connection failed: ", err);
-})
+    .then(() => {
+        console.log("Connected to MongoDB");
+    }).catch(err => {
+        console.log("Connection failed: ", err);
+    })
 
 app.set('query parser', 'extended');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 app.engine('ejs', ejsMate)
 app.use(express.static(path.join(__dirname, 'public')))
@@ -46,8 +46,8 @@ const sessionConfig = {
     cookie: {
         httpOnly: true,
         // secure: true,
-        expires: Date.now() + 1000*60*60*24*7,
-        maxAge: 1000*60*60*24*7,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
     }
 }
 
@@ -61,7 +61,7 @@ const scriptSrcUrls = [
     "https://kit.fontawesome.com/",
     "https://cdnjs.cloudflare.com/",
     "https://cdn.jsdelivr.net",
-    "https://cdn.maptiler.com/", 
+    "https://cdn.maptiler.com/",
 ];
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com/",
@@ -70,11 +70,16 @@ const styleSrcUrls = [
     "https://use.fontawesome.com/",
     "https://cdn.jsdelivr.net",
     "https://cdn.maptiler.com/",
+    "https://cdnjs.cloudflare.com/",
 ];
 const connectSrcUrls = [
     "https://api.maptiler.com/",
 ];
-const fontSrcUrls = [];
+const fontSrcUrls = [
+    "https://cdnjs.cloudflare.com/",
+    "https://use.fontawesome.com/",
+];
+
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
@@ -125,9 +130,9 @@ app.all(/(.*)/, (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
 })
 app.use((err, req, res, next) => {
-    const { statusCode = 500, message = "Something went wrong"} = err;
-    if(!err.message) err.message = "Something went wrong!!"
-    res.status(statusCode).render('error', {err});
+    const { statusCode = 500, message = "Something went wrong" } = err;
+    if (!err.message) err.message = "Something went wrong!!"
+    res.status(statusCode).render('error', { err });
 })
 
 app.listen(3000, () => {

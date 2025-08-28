@@ -5,8 +5,35 @@ maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
 
 module.exports.index = async (req, res) => {
     const campgrounds = await Campground.find({})
-    res.render('campgrounds/index', { campgrounds })
+    res.render('campgrounds/index', { campgrounds, showSearch: true })
 }
+
+
+module.exports.searchCampgrounds = async (req, res) => {
+    const { q } = req.query;
+
+    if (!q || q.trim() === "") {
+        req.flash("error", "Please enter a something to search");
+        return res.redirect("/campgrounds");
+    }
+
+    const campgrounds = await Campground.find({
+        $or: [
+            { title: new RegExp(q, "i") },
+            { location: new RegExp(q, "i") }
+        ]
+    });
+
+    if (campgrounds.length === 0) {
+        req.flash("error", "No campgrounds found");
+        return res.redirect("/campgrounds");
+    }
+
+    res.render("campgrounds/index", { campgrounds, showSearch: true });
+};
+
+
+
 
 module.exports.newCampgroundForm = (req, res) => {
     res.render('campgrounds/new')

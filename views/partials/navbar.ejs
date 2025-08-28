@@ -6,19 +6,33 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
             <div class="navbar-nav">
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link" href="/campgrounds">Campgrounds</a>
                 <a class="nav-link" href="/campgrounds/new">New Campground</a>
             </div>
-            <div class="navbar-nav ms-auto">
-                <% if (!currentUser) { %>
-                    <a class="nav-link" href="/login">Login</a>
-                    <a class="nav-link" href="/register">Register</a>
-                <% } else { %>
-                    <a class="nav-link" href="/logout">Logout</a>
+
+            <% if (typeof showSearch !=="undefined" && showSearch) { %>
+                <form class="d-flex mx-auto" role="search" action="/campgrounds/search" method="GET"
+                    style="max-width: 400px;">
+                    <div class="input-group">
+                        <input class="form-control" type="search" name="q" placeholder="Search campgrounds..."
+                            aria-label="Search">
+                        <button class="btn btn-success" type="submit">Search</button>
+                    </div>
+                </form>
                 <% } %>
-            </div>
+
+
+                    <div class="navbar-nav ms-auto align-items-center">
+                        <% if (!currentUser) { %>
+                            <a class="nav-link" href="/login">Login</a>
+                            <a class="nav-link" href="/register">Register</a>
+                            <% } else { %>
+                                <a class="nav-link" href="/logout">Logout</a>
+                                <% } %>
+                    </div>
         </div>
     </div>
 </nav>

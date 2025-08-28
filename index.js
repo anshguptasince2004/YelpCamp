@@ -15,19 +15,23 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
+const MongoStore = require('connect-mongo');
+
 const sanitizeV5 = require('./utils/mongoSanitizeV5.js');
 const helmet = require('helmet');
 
 const campgroundsRoutes = require('./routes/campgrounds.js')
 const reviewsRoutes = require('./routes/reviews.js')
 const userRoutes = require('./routes/users.js')
+const dbURL = process.env.DB_URL || 'mongodb://localhost:27017/YelpCamp';
+// const dbURL = 'mongodb://localhost:27017/YelpCamp';
 
-mongoose.connect('mongodb://localhost:27017/YelpCamp')
-    .then(() => {
-        console.log("Connected to MongoDB");
-    }).catch(err => {
-        console.log("Connection failed: ", err);
-    })
+mongoose.connect(dbURL);
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+    console.log("Database connected");
+});
 
 app.set('query parser', 'extended');
 app.set('view engine', 'ejs');
@@ -38,7 +42,19 @@ app.engine('ejs', ejsMate)
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(sanitizeV5({ replaceWith: '_' }));
 
+const store = MongoStore.create({
+    mongoUrl: dbURL,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'thisisasecret!'
+    }
+});
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e)
+});
+
 const sessionConfig = {
+    store: store,
     name: 'session',
     secret: 'thisisasecret',
     resave: false,

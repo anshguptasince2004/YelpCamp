@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %>
 <div class="mb-5">
     <div id="clusterMap" class="mb-4"></div>
-    <h1 class="text-center text-decoration-underline">All Campgrounds</h1>
+    <h1 class="text-center text-decoration-underline text-light">All Campgrounds</h1>
     <% if (campgrounds.length===0) { %>
         <div class="alert alert-warning text-center">
             No campgrounds found.
@@ -14,11 +14,11 @@
             </div>
 
             <% for(let campground of campgrounds) {%>
-                <div class="card mb-3">
+                <div class="card mb-3 campground-card">
                     <div class="row">
                         <div class="col-md-4">
                             <% if(campground.images.length) {%>
-                                <img crossorigin="anonymous" src="<%= campground.images[0].url  %>" alt="" class="w-100"
+                                <img crossorigin="anonymous" src="<%= campground.images[0].url  %>" alt="" class="w-100 rounded-4"
                                     height="300">
                                 <% } else { %>
                                     <img crossorigin="anonymous" src="https://via.placeholder.com/300" alt=""
